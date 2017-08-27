@@ -1,0 +1,37 @@
+body {
+    margin: 0;
+
+    font-family: sans-serif;
+}
+
+p {
+  color: blue;;
+}
+
+.layout {
+  display: grid;
+  grid-template:
+    "header header header" min-content
+    ". main ."
+    "footer footer footer" min-content
+    / 1fr minmax(10em, 70em) 1fr;
+
+  min-height: 100vh;
+}
+
+.header {
+    grid-area: header;
+    text-align: center;
+
+    font-size: 2em;
+}
+
+.game {
+    grid-area: main;
+}
+
+.footer {
+    grid-area: footer;
+    text-align: right;
+    background-color: #ccc;
+}
