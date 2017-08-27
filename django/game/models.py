@@ -2,10 +2,19 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+# This is a player in a single game
+class Player(models.Model):
+    user = models.ForeignKey(User)
+    icon = models.CharField(max_length=1)
+    game = models.ForeignKey('Game')
+
+    def __str__(self):
+        return '%s as %s in %s' % (self.user.username, self.icon, self.game.name)
+
+
 # This is a game session
 class Game(models.Model):
     name = models.CharField(max_length=20, default='New game')
-    players = models.ManyToManyField(User)
 
     def __str__(self):
         return self.name
@@ -25,8 +34,8 @@ class Board(models.Model):
     game_status = models.IntegerField(choices=GAME_STATUS_CHOICES, default=0)
 
     game = models.OneToOneField('Game')
-    won_by = models.ForeignKey(User, related_name='games_won', null=True, blank=True)
-    current_turn = models.ForeignKey(User, related_name='current_turns', null=True, blank=True)
+    won_by = models.ForeignKey('Player', related_name='games_won', null=True, blank=True)
+    current_turn = models.ForeignKey('Player', related_name='current_turns', null=True, blank=True)
 
     def __str__(self):
         return 'Board for the game %s' % self.game.name
@@ -35,7 +44,7 @@ class Board(models.Model):
 # These are the tiles placed on a specified board
 class Tile(models.Model):
     board = models.ForeignKey('Board')
-    player = models.ForeignKey(User)
+    player = models.ForeignKey('Player')
     position_x = models.IntegerField()
     position_y = models.IntegerField()
 
@@ -44,4 +53,4 @@ class Tile(models.Model):
 
     def __str__(self):
         return 'Tile on Board %s from player %s on Position %s/%s' % (
-            self.board.game.name, self.player.username, self.position_x, self.position_y)
+            self.board.game.name, self.player.user.username, self.position_x, self.position_y)
