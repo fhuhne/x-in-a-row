@@ -1,0 +1,77 @@
+{% extends 'game/base.html' %}
+
+{% block title %}
+    {{ game.name }}
+{% endblock %}
+
+{% block content %}
+    <div class="layout">
+        <div class="header">
+            <h1 class="header_title">X in a row - the ultimate game</h1>
+        </div>
+        <div class="game">
+
+            <div class="top">
+               <h2 class="game_header">{{ game.name }}</h2>
+            </div>
+            <div class="side">
+                <h3>Players:</h3>
+                {% if game.player_set %}
+                    <ul>
+                        {% for player in game.player_set.all %}
+                            <li>{{ player.user.username }} as {{ player.icon }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    No players!
+                {% endif %}
+            </div>
+
+            <div class="board">
+                {% if user == game.board.current_turn.user %}
+                    <!-- drop buttons -->
+                    <style>
+                        :root {
+                            --game-columns: {{ game.board.width }};
+                            --game-rows: {{ game.board.height|add:"1" }};
+                        }
+                    </style>
+
+                    {% for column in columns %}
+                        <a href="{% url 'drop_tile' game.id column %}" class="board_tile">
+                            &darr;
+                        </a>
+                    {% endfor %}
+
+                {% else %}
+
+                    <style>
+                        :root {
+                            --game-columns: {{ game.board.width }};
+                            --game-rows: {{ game.board.height }};
+                        }
+                    </style>
+
+                    <!-- reload periodically when it's the other users turn. this way we keep the view up to date -->
+                    <script>
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 5000)
+                    </script>
+
+                {% endif %}
+
+                {% for tile in game.board.tile_set.all %}
+                    <div class="board_tile" style="
+                            --tile-column: {{ tile.position_x }};
+                            --tile-row: -{{ tile.position_y }};">
+                        {{ tile.player.icon }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="footer">
+            (C) Finn Huhne 2017
+        </div>
+    </div>
+{% endblock %}

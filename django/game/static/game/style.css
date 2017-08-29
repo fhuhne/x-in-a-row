@@ -8,13 +8,17 @@ p {
   color: blue;;
 }
 
+/*
+ BASIC UI SETUP
+ */
+
 .layout {
   display: grid;
   grid-template:
     "header header header" min-content
     ". main ."
     "footer footer footer" min-content
-    / 1fr minmax(10em, 70em) 1fr;
+    / 1fr min-content 1fr;
 
   min-height: 100vh;
 }
@@ -24,14 +28,78 @@ p {
     text-align: center;
 
     font-size: 2em;
+
+    background-color: #acf;
+}
+
+.header_title {
+    margin: 0;
 }
 
 .game {
     grid-area: main;
+    display: grid;
+    grid-template:
+    "top side" min-content
+    "board side"
+    / 1fr 10em;
+}
+
+.game_header {
+    margin: 0;
 }
 
 .footer {
     grid-area: footer;
     text-align: right;
-    background-color: #ccc;
+    background-color: #eee;
+}
+
+/*
+ GAME STYLING
+ */
+
+.top {
+    grid-area: top;
+    text-align: center;
+}
+
+.side {
+    background-color: #eee;
+
+    grid-area: side;
+}
+
+:root {
+    --game-columns: 5;
+    --game-rows: 3;
+}
+
+.board {
+    align-self: end;
+    padding: 0.5em;
+    margin: 0.5em;
+    grid-area: board;
+    border: 1px solid black;
+
+    display: grid;
+    grid-gap: 0.5em;
+    grid-template-columns: repeat(var(--game-columns), 6em);
+    grid-template-rows: repeat(var(--game-rows), 6em);
+}
+
+.board_tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eee;
+
+    grid-row-end: var(--tile-row);
+    grid-column: var(--tile-column);
+
+    font-size: 3em;
+    text-decoration: none;
+    color: black;
+
+    cursor: default;
 }

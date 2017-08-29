@@ -1,24 +1,32 @@
-{% load static %}
+{% extends 'game/base.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>New Game!</title>
+{% block title %}
+    Home
+{% endblock %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />
-</head>
-<body>
+{% block content %}
     <div class="layout">
         <div class="header">
-            Header
+            X in a row - the ultimate game
         </div>
         <div class="game">
-            <p>Hello, World. Let me tell you a story ...</p>
+
+            <div class="top">
+               <p>Hello, World. Let me tell you a story ...</p>
+            </div>
+            <div class="side">
+                Something on the side
+            </div>
+            <div class="board">
+            <ul>
+                {% for game in games %}
+                    <li><a href="{% url 'game' game.id %}">{{ game.name }}</a></li>
+                {% endfor %}
+            </ul>
+            </div>
         </div>
         <div class="footer">
             (C) Finn Huhne 2017
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

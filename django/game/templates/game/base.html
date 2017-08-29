@@ -1,0 +1,14 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Missing title{% endblock %} - X in a row</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />
+</head>
+<body>
+    {% block content %}Missing content{% endblock %}
+</body>
+</html>
