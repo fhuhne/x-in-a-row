@@ -1,10 +1,20 @@
-TIC TAC TOE
------------
+#x in a row
 
-Let's create the game backend for x(4) in a row.
+This is a simple browser based implementation of the game "four in a row" but variable in win length.
 
-1. Create the objects Board and Tile
+##Installation
 
-1. For the board class implement the drop method which will return a tile instance
+###Requirements
+- Python 3
+- pip
 
-1. Pass the tests.
+It is recommended to use a virtual python environment (virtualenv).
+
+###Setup
+- Install requirements `pip install -r requirements/development.txt`
+- Change into the directory `django` and run `manage.py migrate`
+- Create an admin user `manage.py createsuperuser` (optional)
+- Run local server `manage.py runserver`
+
+###Notes
+In this early development version you will have to create new users through the django admin interface `localhost:8000/admin` and also log in through this page. The game itself including the users in it have to be created manually
