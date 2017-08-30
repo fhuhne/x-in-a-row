@@ -28,37 +28,27 @@
             </div>
 
             <div class="board">
+                <style>
+                    :root {
+                        --game-columns: {{ game.board.width }};
+                        --game-rows: {{ game.board.height|add:"1" }};
+                    }
+                </style>
+
                 {% if user == game.board.current_turn.user %}
                     <!-- drop buttons -->
-                    <style>
-                        :root {
-                            --game-columns: {{ game.board.width }};
-                            --game-rows: {{ game.board.height|add:"1" }};
-                        }
-                    </style>
-
                     {% for column in columns %}
                         <a href="{% url 'drop_tile' game.id column %}" class="board_tile">
                             &darr;
                         </a>
                     {% endfor %}
-
                 {% else %}
-
-                    <style>
-                        :root {
-                            --game-columns: {{ game.board.width }};
-                            --game-rows: {{ game.board.height }};
-                        }
-                    </style>
-
                     <!-- reload periodically when it's the other users turn. this way we keep the view up to date -->
                     <script>
                         setTimeout(function () {
                             window.location.reload();
                         }, 5000)
                     </script>
-
                 {% endif %}
 
                 {% for tile in game.board.tile_set.all %}
