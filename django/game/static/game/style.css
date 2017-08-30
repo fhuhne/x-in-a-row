@@ -88,7 +88,7 @@ p {
     grid-template-rows: repeat(var(--game-rows), 6em);
 }
 
-.board_tile {
+.board__tile {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -102,4 +102,8 @@ p {
     color: black;
 
     cursor: default;
+}
+
+.board__tile--action:hover {
+    background-color: #c6f06d;
 }

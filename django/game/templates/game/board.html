@@ -38,7 +38,7 @@
                 {% if user == game.board.current_turn.user %}
                     <!-- drop buttons -->
                     {% for column in columns %}
-                        <a href="{% url 'drop_tile' game.id column %}" class="board_tile">
+                        <a href="{% url 'drop_tile' game.id column %}" class="board__tile board__tile--action">
                             &darr;
                         </a>
                     {% endfor %}
@@ -52,7 +52,7 @@
                 {% endif %}
 
                 {% for tile in game.board.tile_set.all %}
-                    <div class="board_tile" style="
+                    <div class="board__tile" style="
                             --tile-column: {{ tile.position_x }};
                             --tile-row: -{{ tile.position_y }};">
                         {{ tile.player.icon }}
