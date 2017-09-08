@@ -7,7 +7,7 @@
 {% block content %}
     <div class="layout">
         <div class="header">
-            <h1 class="header_title">X in a row - the ultimate game</h1>
+            <h1 class="header_title">{{ game.board.win_length }} in a row - the ultimate game</h1>
         </div>
         <div class="game">
 
@@ -27,29 +27,35 @@
                 {% endif %}
             </div>
 
+            <div class="board__dropper">
+                {% if game.board.game_status != 2 %}
+                    {% if user == game.board.current_turn.user %}
+                        <!-- drop buttons -->
+                        {% for column in columns %}
+                            <a href="{% url 'drop_tile' game.id column %}" class="board__tile board__tile--action">
+                                &darr;
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <!-- reload periodically when it's the other users turn. this way we keep the view up to date -->
+                        <script>
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 500)
+                        </script>
+                    {% endif %}
+                {% else %}
+                    <p style="grid-column:span {{ game.board.width }};">Gewinner: {{ game.board.won_by }}</p>
+                {% endif %}
+            </div>
+
             <div class="board">
                 <style>
                     :root {
                         --game-columns: {{ game.board.width }};
-                        --game-rows: {{ game.board.height|add:"1" }};
+                        --game-rows: {{ game.board.height }};
                     }
                 </style>
-
-                {% if user == game.board.current_turn.user %}
-                    <!-- drop buttons -->
-                    {% for column in columns %}
-                        <a href="{% url 'drop_tile' game.id column %}" class="board__tile board__tile--action">
-                            &darr;
-                        </a>
-                    {% endfor %}
-                {% else %}
-                    <!-- reload periodically when it's the other users turn. this way we keep the view up to date -->
-                    <script>
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 5000)
-                    </script>
-                {% endif %}
 
                 {% for tile in game.board.tile_set.all %}
                     <div class="board__tile" style="

@@ -41,6 +41,7 @@ p {
     display: grid;
     grid-template:
     "top side" min-content
+    "dropper side" min-content
     "board side"
     / 1fr 10em;
 }
@@ -76,7 +77,7 @@ p {
 }
 
 .board {
-    align-self: end;
+    align-self: start;
     padding: 0.5em;
     margin: 0.5em;
     grid-area: board;
@@ -86,6 +87,20 @@ p {
     grid-gap: 0.5em;
     grid-template-columns: repeat(var(--game-columns), 6em);
     grid-template-rows: repeat(var(--game-rows), 6em);
+}
+
+.board__dropper {
+    align-self: end;
+    padding: 0.5em;
+    margin: 0.5em;
+    grid-area: dropper;
+    border: 1px solid black;
+
+    min-height: 5em;
+
+    display: grid;
+    grid-gap: 0.5em;
+    grid-template-columns: repeat(var(--game-columns), 6em);
 }
 
 .board__tile {
