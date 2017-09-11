@@ -11,6 +11,8 @@ class GameAdmin(admin.ModelAdmin):
         PlayerInline,
     ]
 
+
 admin.site.register(Board)
 admin.site.register(Tile)
+admin.site.register(Player)
 admin.site.register(Game, GameAdmin)

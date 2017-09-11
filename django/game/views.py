@@ -3,7 +3,10 @@ from .models import Game, Player
 
 
 def index(request):
-    games = Game.objects.all()
+    """
+    Overview with all active games
+    """
+    games = Game.objects.exclude(board__game_status='2')
     context = {
         'games': games,
     }
@@ -11,8 +14,11 @@ def index(request):
 
 
 def board(request, game_id):
+    """
+    Display the board
+    """
     game = get_object_or_404(Game, pk=game_id)
-    columns = range(1, game.board.width + 1)  # range wont include end value -> +1
+    columns = range(1, game.board.width + 1)  # range wont include end value -> + 1
     user = request.user
     context = {
         'user': user,
@@ -23,6 +29,9 @@ def board(request, game_id):
 
 
 def drop_tile(request, game_id, column):
+    """
+    Handle the tile drop logic. No view, redirect to the current board
+    """
     game = get_object_or_404(Game, pk=game_id)
     player = Player.objects.get(user=request.user, game=game)
 

@@ -3,8 +3,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# This is a player in a single game
 class Player(models.Model):
+    """
+    User instance for one single game
+    """
     user = models.ForeignKey(User)
     icon = models.CharField(max_length=1)
     game = models.ForeignKey('Game')
@@ -13,16 +15,20 @@ class Player(models.Model):
         return '%s as %s in %s' % (self.user.username, self.icon, self.game.name)
 
 
-# This is a game session
 class Game(models.Model):
+    """
+    The Game model is just a holder for all the game relevant models
+    """
     name = models.CharField(max_length=20, default='New game')
 
     def __str__(self):
         return self.name
 
 
-# This contains the state of the board
 class Board(models.Model):
+    """
+    The board defines the state of the game
+    """
     GAME_STATUS_CHOICES = (
         (0, 'Inactive'),
         (1, 'Active'),
@@ -50,12 +56,14 @@ class Board(models.Model):
 
         for row in range(1, self.height + 1):
             try:
+                # Try to get a tile for this position
                 Tile.objects.get(position_x=col, position_y=row, board=board)
-            except ObjectDoesNotExist as e:
-                # This happens when it is empty. Place tile, switch user and exit
+            except ObjectDoesNotExist:
+                # When no tile is found, we can place a new one here.
                 tile = Tile(board=board, player=player, position_x=col, position_y=row)
                 tile.save()
 
+                # Check if placing the tile won the game. Change current turn when not and exit
                 self.check_game_status(tile)
                 if self.game_status != 2:
                     self.current_turn = Player.objects.filter(game=self.game).exclude(pk=player.pk).get()
@@ -68,25 +76,30 @@ class Board(models.Model):
         raise Exception('Board seems to be full ...')
 
     def check_game_status(self, tile: 'Tile'):
+        # Generate the 4 axis strings (0 = vertical |, 1 = diagonal \, 2 = diagonal /, 3 = horizontal -)
         axis_strings = self.axis_strings(tile.position_x, tile.position_y)
 
         for axis in axis_strings:
+            # Initialize base variables
             last_player = None
             count = 1
 
             for index, tile in enumerate(axis_strings[axis]):
                 if tile:
+                    # Increase counter if tile is from same player as previous one
                     if last_player == tile.player:
                         count += 1
                     else:
                         count = 1
 
+                    # check if tile count is equal to or larger to required win length
                     if count >= self.win_length:
                         self.game_status = 2
                         self.won_by = tile.player
 
                     last_player = tile.player
                 else:
+                    # Reset counter when we pass an empty tile
                     count = 1
                     last_player = None
 
@@ -116,7 +129,7 @@ class Board(models.Model):
         """
         Diagonal 1 -> left top going bottom right
         """
-        # Get the offset to the starting point. This will be the shorter axis.
+        # Get the offset to the starting point. This will be the shorter axis (First axis to hit the border).
         offset_d1 = xc - 1 if xc - 1 < self.height - yc else self.height - yc
 
         # Get the max length for this diagonal.
@@ -124,9 +137,8 @@ class Board(models.Model):
         yl_d1 = yc + offset_d1  # Count how far we can go down on the y-axis
         length_d1 = xl_d1 if xl_d1 < yl_d1 else yl_d1  # use the smaller one for the max length
 
-        # go through the diagonal
-        for position_d1 in range(length_d1):
-            # axis_strings[1] += self.board[xc - offset_d1 + position_d1][yc + offset_d1 - position_d1]
+        # go through the diagonal, start with 0 offset but end with + 1 because of range ...
+        for position_d1 in range(length_d1 + 1):
             try:
                 tile = self.tile_set.get(
                     position_x=(xc - offset_d1 + position_d1),
@@ -146,8 +158,7 @@ class Board(models.Model):
         yl_d2 = self.height - (yc - offset_d2)
         length_d2 = xl_d2 if xl_d2 < yl_d2 else yl_d2
 
-        for position_d2 in range(length_d2):
-            # axis_strings[2] += self.board[xc - offset_d2 + position_d2][yc - offset_d2 + position_d2]
+        for position_d2 in range(length_d2 + 1):
             try:
                 tile = self.tile_set.get(
                     position_x=(xc - offset_d2 + position_d2),
@@ -170,8 +181,10 @@ class Board(models.Model):
         return axis_strings
 
 
-# These are the tiles placed on a specified board
 class Tile(models.Model):
+    """
+    Tiles represent a position on the board
+    """
     board = models.ForeignKey('Board')
     player = models.ForeignKey('Player')
     position_x = models.IntegerField()
