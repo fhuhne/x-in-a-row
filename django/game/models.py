@@ -54,6 +54,9 @@ class Board(models.Model):
             # This will happen when it's not the players turn
             raise Exception('It\'s not this players turn!')
 
+        if board.width < int(col):
+            raise Exception('Column out of range')
+
         for row in range(1, self.height + 1):
             try:
                 # Try to get a tile for this position
