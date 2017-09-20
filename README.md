@@ -12,7 +12,8 @@ It is recommended to use a virtual python environment (virtualenv).
 
 ### Setup
 - Install requirements `pip install -r requirements/development.txt`
-- Change into the directory `django` and run `manage.py migrate`
+- Change into the directory `django`
+- Run `manage.py migrate` when running for the first time or when updating
 - Create an admin user `manage.py createsuperuser` (optional)
 - Run local server `manage.py runserver`
 
